@@ -48,14 +48,14 @@ function zoom(event) {
     scale = Math.min(Math.max(.125, scale), );
   
     // Apply scale transform
-    image.style.transform = `scale(${scale})`;
+    event.target.style.transform = `scale(${scale})`;
   }  
 let scale = 1;
-const image = document.querySelector('img');
-image.addEventListener('wheel', zoom);
+const image = document.querySelectorAll('img');
 
-//???I don't know why I can't get the above to work with selecting specific images (can only
-// get it to work with the first image)
+image.forEach((element) => {
+    element.addEventListener('wheel', zoom);
+  });
 
 //change text background color on headers upon various types of selection
 
@@ -83,61 +83,38 @@ headers[2].addEventListener('mouseup', (event) => {
 //Create alert when content has been copied to the clipboard
 
 const paragraphs = document.querySelectorAll('p');
-for (i = 0; i < paragraphs.length; ++i) {
-    paragraphs[i].addEventListener('copy', (event) => {
-        alert('Your text has been copied to the clipboard');
-    })
-  }
+// for (i = 0; i < paragraphs.length; ++i) {
+//     paragraphs[i].addEventListener('copy', (event) => {
+//         alert('Your text has been copied to the clipboard');
+//     })
+//   }
 
-// paragraphs.forEach(function (para) {
-//     para.addEventListener('copy', (event) => {
-//     alert('Your text has been copied to the clipboard');
-// })
-// }
-//Can't figure out how to refactor into forEach format instead of for loop
+paragraphs.forEach( (para) => {
+    para.addEventListener('copy', (event) => {
+        alert('Your text has been copied to the clipboard');
+    })})
 
 //Use keypress to change background color
-// const footer = document.querySelector('footer');
-// footer.addEventListener('keypress', (event) => {
-//     event.target.style.backgroundColor = 'black';
-//     event.stopPropagation();
-// })
-//??? Why doesn't the above do anything but the code below works?
-
-const body = document.querySelector('body'); 
+const footer = document.querySelector('footer');
+const body = document.querySelector('body');
 body.addEventListener('keypress', (event) => {
-    event.target.style.backgroundColor = 'orange';
+    footer.style.backgroundColor = 'black';
     event.stopPropagation();
-});
+})
 
 //make destinations take up whole screen upon mouseover 
 const destinations = document.querySelectorAll('div .destination');
 
-destinations[0].addEventListener('mouseover', (event) => {
-    event.target.style.width = '800px';
-    destinations[1].style.width = '0px';
-    destinations[1].style.display = 'none';
-    destinations[2].style.width = '0px';
-    destinations[2].style.display = 'none';
-    event.stopPropagation(); 
+destinations.forEach( (targetDestination, targetIndex) => {
+    targetDestination.addEventListener('mouseover', (event) => {
+        event.currentTarget.style.width = '100%';
+        destinations.forEach( (nonTargetDestination, nonTargetIndex) => {
+            if (targetIndex != nonTargetIndex) {
+                nonTargetDestination.style.display = 'none';
+            }
+        })
+        event.stopPropagation(); 
+    })
 })
 
-destinations[1].addEventListener('mouseover', (event) => {
-    event.target.style.width = '800px';
-    destinations[0].style.width = '0px';
-    destinations[0].style.display = 'none';
-    destinations[2].style.width = '0px';
-    destinations[2].style.display = 'none';
-    event.stopPropagation(); 
-})
 
-destinations[2].addEventListener('mouseover', (event) => {
-    event.target.style.width = '800px';
-    destinations[0].style.width = '0px';
-    destinations[0].style.display = 'none';
-    destinations[1].style.width = '0px';
-    destinations[1].style.display = 'none';
-    event.stopPropagation(); 
-})
-
-//how do I get the event to occur all at once instead of only when the button, p, etc are moused over 
